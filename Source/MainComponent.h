@@ -8,7 +8,8 @@
     your controls and content.
 */
 class MainComponent  :  public juce::AudioAppComponent,
-                        public juce::ChangeListener
+                        public juce::ChangeListener,
+                        public juce::Timer
 {
 public:
     //==============================================================================
@@ -20,8 +21,14 @@ public:
     void getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill) override;
     void releaseResources() override;
     void changeListenerCallback (juce::ChangeBroadcaster* source) override;
+    void thumbnailChanged();
+    //==============================================================================
+    void paint(juce::Graphics& g) override;
+    void paintIfNoFileLoaded(juce::Graphics& g, const juce::Rectangle<int>& thumbnailBounds);
+    void paintIfLoaded(juce::Graphics& g, const juce::Rectangle<int>& thumbnailBounds);
     //==============================================================================
     void resized() override;
+    void timerCallback() override;
 
 
 private:
@@ -32,6 +39,8 @@ private:
         Stopped,
         Starting,
         Playing,
+        Pausing,
+        Paused,
         Stopping
     };
 
@@ -46,11 +55,16 @@ private:
     juce::TextButton playButton;
     juce::TextButton stopButton;
 
+    juce::Label timeLabel;
+    juce::String strTime;
+
     std::unique_ptr<juce::FileChooser> chooser;
 
     juce::AudioFormatManager formatManager;
     std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
     juce::AudioTransportSource transportSource;
+    juce::AudioThumbnailCache thumbnailCache; //passes argument to AudioThumbnail
+    juce::AudioThumbnail thumbnail;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };
