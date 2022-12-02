@@ -4,7 +4,8 @@
 //==============================================================================
 MainComponent::MainComponent() : state(Stopped),
                                  thumbnailCache (5),
-                                 thumbnail(512, formatManager, thumbnailCache)
+                                 waveform(512, formatManager, thumbnailCache),
+                                 positionLine(transportSource, timeLabel)
 {
     // Make sure you set the size of the component after
     // you add any child components.
@@ -26,15 +27,22 @@ MainComponent::MainComponent() : state(Stopped),
     stopButton.setColour(juce::TextButton::buttonColourId, juce::Colours::red);
     stopButton.setEnabled(false);
 
+//    addAndMakeVisible(&showButton);
+//    showButton.setButtonText("Show Audio Spectrum");
+//    showButton.onClick = [this] { showButtonClicked(); };
+//    showButton.setEnabled(false);
+
     addAndMakeVisible(&timeLabel);
     timeLabel.setJustificationType(juce::Justification::centred);
     timeLabel.attachToComponent(&openButton, false);
 
+    addAndMakeVisible(&waveform);
+    addAndMakeVisible(&positionLine);
+    addAndMakeVisible(&spectrum);
 
-    setSize (400, 300);
+    setSize (600, 800);
 
     formatManager.registerBasicFormats();
-    thumbnail.addChangeListener(this);
     transportSource.addChangeListener(this);
 
     setAudioChannels (0, 2);
@@ -56,10 +64,16 @@ void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& buffe
     if(readerSource.get() == nullptr)
     {
         bufferToFill.clearActiveBufferRegion();
-        return;
-    }
+    }else
+        transportSource.getNextAudioBlock(bufferToFill);
 
-    transportSource.getNextAudioBlock(bufferToFill);
+    if(bufferToFill.buffer -> getNumChannels() > 0 ){
+        auto* channelData = bufferToFill.buffer->getReadPointer(0, bufferToFill.startSample);
+
+        for(auto i{0}; i<bufferToFill.numSamples; ++i){
+            spectrum.pushNextSampleIntoFifo (channelData[i]);
+        }
+    }
 }
 
 void MainComponent::releaseResources()
@@ -78,66 +92,19 @@ void MainComponent::changeListenerCallback(juce::ChangeBroadcaster* source)
         else if(state == Pausing)
             changeState(Paused);
     }
-
-    if(source == &thumbnail)    thumbnailChanged();
 }
-
-void MainComponent::thumbnailChanged()
-{
-    repaint();
-}
-
-//==============================================================================
-void MainComponent::paint(juce::Graphics& g)
-{
-    juce::Rectangle<int> thumbnailBounds(10, 120, getWidth() -20, getHeight() - 120);
-    if(thumbnail.getNumChannels() == 0)
-        paintIfNoFileLoaded(g, thumbnailBounds);
-    else
-        paintIfLoaded(g, thumbnailBounds);
-}
-
-void MainComponent::paintIfNoFileLoaded(juce::Graphics& g, const juce::Rectangle<int>& thumbnailBounds)
-{
-    g.setColour(juce::Colours::darkgrey);
-    g.fillRect(thumbnailBounds);
-    g.setColour(juce::Colours::white);
-    g.drawFittedText("No File loaded", thumbnailBounds, juce::Justification::centred, 1);
-}
-
-void MainComponent::paintIfLoaded(juce::Graphics& g, const juce::Rectangle<int>& thumbnailBounds)
-{
-    g.setColour(juce::Colours::black);
-    g.fillRect(thumbnailBounds);
-
-    g.setColour(juce::Colours::white);
-    auto audioLength = static_cast<float> (thumbnail.getTotalLength());
-    thumbnail.drawChannels(g, thumbnailBounds, 0.0, audioLength, 1.0f);
-                                                //start time, end time, vertical zoom
-    g.setColour(juce::Colours::green);
-
-    auto audioPosition = static_cast<float> (transportSource.getCurrentPosition());
-    auto drawPosition = (audioPosition/audioLength) * static_cast<float> (thumbnailBounds.getWidth())
-                        + static_cast<float> (thumbnailBounds.getX());
-    g.drawLine (drawPosition, static_cast<float> (thumbnailBounds.getY()), drawPosition,
-                static_cast<float> (thumbnailBounds.getBottom()), 2.0f);
-}
-
 //==============================================================================
 void MainComponent::resized()
 {
     openButton.setBounds(10, 25, getWidth() - 20, 20);
     playButton.setBounds(10, 55, getWidth() - 20, 20);
     stopButton.setBounds(10, 85, getWidth() - 20, 20);
-}
-
-void MainComponent::timerCallback()
-{
-    repaint();
-    juce::RelativeTime cur(transportSource.getCurrentPosition());
-    juce::RelativeTime total(transportSource.getLengthInSeconds());
-    strTime = cur.getDescription("0") + " / " + total.getDescription("");
-    timeLabel.setText(strTime, juce::dontSendNotification);
+    //showButton.setBounds(10, 115, getWidth() - 20, 20);
+    juce::Rectangle<int> thumbnailBounds(10, 150, getWidth() - 20, 300);
+    juce::Rectangle<int> spectrumBounds(10, 470 , getWidth() - 20, getHeight() - 490);
+    waveform.setBounds(thumbnailBounds);
+    positionLine.setBounds(thumbnailBounds);
+    spectrum.setBounds(spectrumBounds);
 }
 
 void MainComponent::changeState(TransportState newState)
@@ -153,14 +120,17 @@ void MainComponent::changeState(TransportState newState)
                 stopButton.setButtonText("Stop");
                 stopButton.setEnabled(false);
                 transportSource.setPosition(0.0);
+                positionLine.stopTimer();
                 break;
 
             case Starting:
                 transportSource.start();
+                positionLine.startTimer(40);
                 break;
 
             case Pausing:
                 transportSource.stop();
+                positionLine.stopTimer();
                 break;
 
             case Paused:
@@ -198,15 +168,13 @@ void MainComponent::openButtonClicked() {
 
             if (reader != nullptr)
             {
-                startTimer (40);
                 auto newSource = std::make_unique<juce::AudioFormatReaderSource>(reader, true);
                 transportSource.setSource(newSource.get(), 0, nullptr, reader->sampleRate);
-                thumbnail.setSource(new juce::FileInputSource (file));
-
+                waveform.setFile(file);
                 playButton.setEnabled(true);
+                playButton.setButtonText("play");
+                stopButton.setButtonText("stop");
                 readerSource.reset(newSource.release());
-                playButton.setButtonText("Play");
-                stopButton.setButtonText("Stop");
             }
         }
     });
@@ -228,4 +196,7 @@ void MainComponent::stopButtonClicked()
         changeState(Stopping);
 }
 
-
+//void MainComponent::showButtonClicked()
+//{
+//
+//}

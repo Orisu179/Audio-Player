@@ -1,6 +1,10 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "PositionLine.h"
+#include "Waveform.h"
+#include "Spectrum.h"
+
 
 //==============================================================================
 /*
@@ -8,8 +12,7 @@
     your controls and content.
 */
 class MainComponent  :  public juce::AudioAppComponent,
-                        public juce::ChangeListener,
-                        public juce::Timer
+                        public juce::ChangeListener
 {
 public:
     //==============================================================================
@@ -21,15 +24,8 @@ public:
     void getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill) override;
     void releaseResources() override;
     void changeListenerCallback (juce::ChangeBroadcaster* source) override;
-    void thumbnailChanged();
-    //==============================================================================
-    void paint(juce::Graphics& g) override;
-    void paintIfNoFileLoaded(juce::Graphics& g, const juce::Rectangle<int>& thumbnailBounds);
-    void paintIfLoaded(juce::Graphics& g, const juce::Rectangle<int>& thumbnailBounds);
     //==============================================================================
     void resized() override;
-    void timerCallback() override;
-
 
 private:
     //==============================================================================
@@ -50,21 +46,24 @@ private:
     void openButtonClicked();
     void playButtonClicked();
     void stopButtonClicked();
+    //void showButtonClicked();
 
     juce::TextButton openButton;
     juce::TextButton playButton;
     juce::TextButton stopButton;
-
-    juce::Label timeLabel;
-    juce::String strTime;
+    //juce::TextButton showButton;
 
     std::unique_ptr<juce::FileChooser> chooser;
+    juce::Label timeLabel;
 
     juce::AudioFormatManager formatManager;
     std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
     juce::AudioTransportSource transportSource;
     juce::AudioThumbnailCache thumbnailCache; //passes argument to AudioThumbnail
-    juce::AudioThumbnail thumbnail;
+
+    Waveform waveform;
+    PositionLine positionLine;
+    Spectrum spectrum;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };

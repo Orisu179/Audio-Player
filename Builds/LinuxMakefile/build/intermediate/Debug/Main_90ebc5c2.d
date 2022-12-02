@@ -471,6 +471,51 @@ build/intermediate/Debug/Main_90ebc5c2.o: ../../Source/Main.cpp \
  /home/tyler/JUCE/modules/juce_audio_utils/players/juce_AudioProcessorPlayer.h \
  /home/tyler/JUCE/modules/juce_audio_utils/audio_cd/juce_AudioCDBurner.h \
  /home/tyler/JUCE/modules/juce_audio_utils/audio_cd/juce_AudioCDReader.h \
+ /home/tyler/JUCE/modules/juce_dsp/juce_dsp.h \
+ /home/tyler/JUCE/modules/juce_dsp/native/juce_fallback_SIMDNativeOps.h \
+ /home/tyler/JUCE/modules/juce_dsp/native/juce_sse_SIMDNativeOps.h \
+ /home/tyler/JUCE/modules/juce_dsp/containers/juce_SIMDRegister.h \
+ /home/tyler/JUCE/modules/juce_dsp/containers/juce_SIMDRegister_Impl.h \
+ /home/tyler/JUCE/modules/juce_dsp/maths/juce_SpecialFunctions.h \
+ /home/tyler/JUCE/modules/juce_dsp/maths/juce_Matrix.h \
+ /home/tyler/JUCE/modules/juce_dsp/maths/juce_Phase.h \
+ /home/tyler/JUCE/modules/juce_dsp/maths/juce_Polynomial.h \
+ /home/tyler/JUCE/modules/juce_dsp/maths/juce_FastMathApproximations.h \
+ /home/tyler/JUCE/modules/juce_dsp/maths/juce_LookupTable.h \
+ /home/tyler/JUCE/modules/juce_dsp/maths/juce_LogRampedValue.h \
+ /home/tyler/JUCE/modules/juce_dsp/containers/juce_AudioBlock.h \
+ /home/tyler/JUCE/modules/juce_dsp/containers/juce_FixedSizeFunction.h \
+ /home/tyler/JUCE/modules/juce_dsp/processors/juce_ProcessContext.h \
+ /home/tyler/JUCE/modules/juce_dsp/processors/juce_ProcessorWrapper.h \
+ /home/tyler/JUCE/modules/juce_dsp/processors/juce_ProcessorChain.h \
+ /home/tyler/JUCE/modules/juce_dsp/processors/juce_ProcessorDuplicator.h \
+ /home/tyler/JUCE/modules/juce_dsp/processors/juce_IIRFilter.h \
+ /home/tyler/JUCE/modules/juce_dsp/processors/juce_IIRFilter_Impl.h \
+ /home/tyler/JUCE/modules/juce_dsp/processors/juce_FIRFilter.h \
+ /home/tyler/JUCE/modules/juce_dsp/processors/juce_StateVariableFilter.h \
+ /home/tyler/JUCE/modules/juce_dsp/processors/juce_FirstOrderTPTFilter.h \
+ /home/tyler/JUCE/modules/juce_dsp/processors/juce_Panner.h \
+ /home/tyler/JUCE/modules/juce_dsp/processors/juce_DelayLine.h \
+ /home/tyler/JUCE/modules/juce_dsp/processors/juce_Oversampling.h \
+ /home/tyler/JUCE/modules/juce_dsp/processors/juce_BallisticsFilter.h \
+ /home/tyler/JUCE/modules/juce_dsp/processors/juce_LinkwitzRileyFilter.h \
+ /home/tyler/JUCE/modules/juce_dsp/processors/juce_DryWetMixer.h \
+ /home/tyler/JUCE/modules/juce_dsp/processors/juce_StateVariableTPTFilter.h \
+ /home/tyler/JUCE/modules/juce_dsp/frequency/juce_FFT.h \
+ /home/tyler/JUCE/modules/juce_dsp/frequency/juce_Convolution.h \
+ /home/tyler/JUCE/modules/juce_dsp/frequency/juce_Windowing.h \
+ /home/tyler/JUCE/modules/juce_dsp/filter_design/juce_FilterDesign.h \
+ /home/tyler/JUCE/modules/juce_dsp/widgets/juce_Reverb.h \
+ /home/tyler/JUCE/modules/juce_dsp/widgets/juce_Bias.h \
+ /home/tyler/JUCE/modules/juce_dsp/widgets/juce_Gain.h \
+ /home/tyler/JUCE/modules/juce_dsp/widgets/juce_WaveShaper.h \
+ /home/tyler/JUCE/modules/juce_dsp/widgets/juce_Oscillator.h \
+ /home/tyler/JUCE/modules/juce_dsp/widgets/juce_LadderFilter.h \
+ /home/tyler/JUCE/modules/juce_dsp/widgets/juce_Compressor.h \
+ /home/tyler/JUCE/modules/juce_dsp/widgets/juce_NoiseGate.h \
+ /home/tyler/JUCE/modules/juce_dsp/widgets/juce_Limiter.h \
+ /home/tyler/JUCE/modules/juce_dsp/widgets/juce_Phaser.h \
+ /home/tyler/JUCE/modules/juce_dsp/widgets/juce_Chorus.h \
  /home/tyler/JUCE/modules/juce_gui_extra/juce_gui_extra.h \
  /home/tyler/JUCE/modules/juce_gui_extra/documents/juce_FileBasedDocument.h \
  /home/tyler/JUCE/modules/juce_gui_extra/code_editor/juce_CodeDocument.h \
@@ -498,4 +543,5 @@ build/intermediate/Debug/Main_90ebc5c2.o: ../../Source/Main.cpp \
  /home/tyler/JUCE/modules/juce_gui_extra/misc/juce_WebBrowserComponent.h \
  /home/tyler/JUCE/modules/juce_gui_extra/misc/juce_LiveConstantEditor.h \
  /home/tyler/JUCE/modules/juce_gui_extra/misc/juce_AnimatedAppComponent.h \
- ../../Source/MainComponent.h
+ ../../Source/MainComponent.h ../../Source/PositionLine.h \
+ ../../Source/Waveform.h ../../Source/Spectrum.h
