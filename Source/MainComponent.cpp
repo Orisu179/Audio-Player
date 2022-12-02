@@ -31,7 +31,7 @@ MainComponent::MainComponent() : state(Stopped),
     timeLabel.attachToComponent(&openButton, false);
 
 
-    setSize (400, 300);
+    setSize (800, 600);
 
     formatManager.registerBasicFormats();
     thumbnail.addChangeListener(this);
@@ -136,7 +136,10 @@ void MainComponent::timerCallback()
     repaint();
     juce::RelativeTime cur(transportSource.getCurrentPosition());
     juce::RelativeTime total(transportSource.getLengthInSeconds());
-    strTime = cur.getDescription("0") + " / " + total.getDescription("");
+    if(cur.inSeconds() >= 1.0)
+        strTime = cur.getDescription("0") + " / " + total.getDescription("");
+    else
+        strTime = "0 secs / " + total.getDescription("");
     timeLabel.setText(strTime, juce::dontSendNotification);
 }
 
