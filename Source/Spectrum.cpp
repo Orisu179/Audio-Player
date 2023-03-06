@@ -8,7 +8,6 @@ Spectrum::Spectrum() :forwardFFT (fftOrder),
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
     startTimerHz(60);
-    loaded = false;
 }
 
 //Spectrum::~Spectrum()
@@ -18,13 +17,6 @@ Spectrum::Spectrum() :forwardFFT (fftOrder),
 void Spectrum::paint (juce::Graphics& g)
 {
     paintIfFileLoaded(g);
-}
-
-void Spectrum::resized()
-{
-    // This method is where you should set the bounds of any child
-    // components that your component contains..
-
 }
 
 void Spectrum::paintIfFileLoaded(juce::Graphics &g)

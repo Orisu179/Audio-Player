@@ -88,7 +88,7 @@ void MainComponent::changeListenerCallback(juce::ChangeBroadcaster* source)
         if(transportSource.isPlaying())
             changeState(Playing);
         else if(state == Stopping || state == Playing)
-            changeState(Stopped);
+            changeState(ropped);
         else if(state == Pausing)
             changeState(Paused);
     }
